@@ -26,4 +26,5 @@ before_deploy:
 deploy:
   provider: script
   script: docker push "${IMAGE_NAME}:latest" && docker push "${IMAGE_NAME}:${COMMIT}"
+  on:
     branch: master
