@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SecurityService.App;
+using SecurityService.App.Messaging;
 using SecurityService.Core.Messaging;
 using SecurityService.Infrastructure.DI;
 using System;

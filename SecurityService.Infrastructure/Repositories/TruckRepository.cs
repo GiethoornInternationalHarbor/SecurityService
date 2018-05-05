@@ -28,7 +28,7 @@ namespace SecurityService.Infrastructure.Repositories
 				throw new KeyNotFoundException($"Truck with license plate: {value.LicensePlate} not found.");
 			}
 
-			Truck existingTruck = await _database.Trucks.LastOrDefaultAsync(r => r.LicensePlate == value.LicensePlate);
+			Truck existingTruck = await this.GetAsync(value.LicensePlate);
 
 			existingTruck.Container = value.Container;
 			existingTruck.Status = value.Status;
@@ -54,7 +54,7 @@ namespace SecurityService.Infrastructure.Repositories
 
 		public async Task UpdateSecurityStatusAsync(string plate, SecurityStatus securityStatus)
 		{
-			Truck existingTruck = await _database.Trucks.LastOrDefaultAsync(r => r.LicensePlate == plate);
+			Truck existingTruck = await this.GetAsync(plate);
 
 			existingTruck.SecurityStatus = securityStatus;
 
@@ -72,6 +72,20 @@ namespace SecurityService.Infrastructure.Repositories
 			await _database.SaveChangesAsync();
 
 			return newTruck;
+		}
+
+		public Task<Truck> GetAsync(string plate)
+		{
+			return _database.Trucks.LastOrDefaultAsync(r => r.LicensePlate == plate);
+		}
+
+		public async Task UpdateContainerAsync(string plate, Container container = null)
+		{
+			Truck existingTruck = await GetAsync(plate);
+
+			existingTruck.Container = container;
+
+			await Update(existingTruck);
 		}
 	}
 }
