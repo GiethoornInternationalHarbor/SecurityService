@@ -30,6 +30,7 @@ namespace SecurityService.Infrastructure.DI
 			services.AddTransient<ISecurityService, Services.SecurityService>();
 
 			services.AddSingleton<IMessageHandler, RabbitMQMessageHandler>((provider) => new RabbitMQMessageHandler(configuration.GetSection("AMQP_URL").Value));
+			services.AddTransient<IMessagePublisher, RabbitMQMessagePublisher>((provider) => new RabbitMQMessagePublisher(configuration.GetSection("AMQP_URL").Value));
 		}
 
 		public static void OnServicesSetup(IServiceProvider serviceProvider)

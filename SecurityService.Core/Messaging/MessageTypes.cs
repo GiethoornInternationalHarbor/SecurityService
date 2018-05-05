@@ -8,6 +8,7 @@
 		TruckArrivedEvent,
 		TruckDepartedEvent,
 		ShipContainerLoadedEvent,
-		ShipContainerUnloadedEvent
+		ShipContainerUnloadedEvent,
+		TruckClearedEvent
 	}
 }

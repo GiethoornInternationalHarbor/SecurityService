@@ -51,7 +51,7 @@ namespace SecurityService
 
 		static void Main(string[] args)
 		{
-			JsonSerializer.SetDefaultResolver(StandardResolver.CamelCase);
+			CompositeResolver.RegisterAndSetAsDefault(StandardResolver.CamelCase, EnumResolver.UnderlyingValue);
 
 			// Get the message handler
 			IMessageHandler messageHandler = ServiceProvider.GetService<IMessageHandler>();

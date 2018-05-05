@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using SecurityService.Core;
+using SecurityService.Core.Messaging;
 using SecurityService.Core.Models;
 using SecurityService.Core.Repositories;
 using SecurityService.Core.Services;
@@ -13,13 +14,15 @@ namespace SecurityService.Infrastructure.Services
 {
 	public class SecurityService : ISecurityService
 	{
-		private const int CHECK_DURATION = 600000;
+		private const int CHECK_DURATION = 30000;
 		private readonly ITruckRepository _truckRepository;
+		private readonly IMessagePublisher _messagePublisher;
 		private readonly CancellationToken _cancellationToken;
 
-		public SecurityService(ITruckRepository truckRepository)
+		public SecurityService(ITruckRepository truckRepository, IMessagePublisher messagePublisher)
 		{
 			_truckRepository = truckRepository;
+			_messagePublisher = messagePublisher;
 			_cancellationToken = new CancellationToken();
 		}
 
@@ -33,8 +36,8 @@ namespace SecurityService.Infrastructure.Services
 				Thread.Sleep(truck.Container == null ? CHECK_DURATION / 2 : CHECK_DURATION);
 				truck.SecurityStatus = SecurityStatus.Completed;
 				await _truckRepository.UpdateSecurityStatusAsync(truck.LicensePlate, SecurityStatus.Completed);
-								
-				// TODO: Emit cleared event now :-)
+
+				await _messagePublisher.PublishMessageAsync(MessageTypes.TruckClearedEvent, truck);
 			}, _cancellationToken);
 		}
 
