@@ -45,6 +45,8 @@ namespace SecurityService.Infrastructure.Messaging
 					_consumer = new EventingBasicConsumer(_model);
 					_consumer.Received += Consumer_Received;
 					_consumerTag = _model.BasicConsume(_queuename, false, _consumer);
+
+					Console.WriteLine("Connected to RabbitMQ");
 				});
 		}
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using dotenv.net;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SecurityService.App;
 using SecurityService.App.Messaging;
@@ -7,6 +8,8 @@ using SecurityService.Infrastructure.DI;
 using System;
 using System.IO;
 using System.Threading;
+using Utf8Json;
+using Utf8Json.Resolvers;
 
 namespace SecurityService
 {
@@ -16,7 +19,13 @@ namespace SecurityService
 
 		static Program()
 		{
-			DotNetEnv.Env.Load();
+			string filePath = ".env";
+
+#if DEBUG
+			filePath = Path.Combine(AppContext.BaseDirectory.Substring(0, AppContext.BaseDirectory.LastIndexOf("bin")), filePath);
+#endif
+
+			DotEnv.Config(throwOnError: false, filePath: filePath);
 
 			//setup our DI
 			var serviceCollection = new ServiceCollection();
@@ -42,6 +51,8 @@ namespace SecurityService
 
 		static void Main(string[] args)
 		{
+			JsonSerializer.SetDefaultResolver(StandardResolver.CamelCase);
+
 			// Get the message handler
 			IMessageHandler messageHandler = ServiceProvider.GetService<IMessageHandler>();
 			IMessageHandlerCallback messageHandlerCallback = ServiceProvider.GetService<IMessageHandlerCallback>();
