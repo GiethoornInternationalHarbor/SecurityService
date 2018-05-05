@@ -81,8 +81,17 @@ namespace SecurityService.Infrastructure.Messaging
 			// get body
 			string body = Encoding.UTF8.GetString(ea.Body);
 
-			// call callback to handle the message
-			return await _callback.HandleMessageAsync(messageType, body);
+			try
+			{
+				// call callback to handle the message
+				return await _callback.HandleMessageAsync(messageType, body);
+			}
+			catch (Exception ex)
+			{
+				await Console.Error.WriteLineAsync($"Error during handling message, {ex.Message}");
+				// Might fail to handle
+				return false;
+			}
 		}
 	}
 }
