@@ -9,21 +9,45 @@ namespace SecurityService.Core.Services
 	public interface ISecurityService
 	{
 		/// <summary>
-		/// Saves the truck.
+		/// Creates the truck asynchronous.
 		/// </summary>
 		/// <param name="truck">The truck.</param>
 		/// <returns></returns>
-		Task<Truck> SaveTruck(Truck truck);
+		Task<Truck> CreateTruckAsync(Truck truck);
 
 		/// <summary>
-		/// Checks the outstanding checks.
+		/// Updates the truck container asynchronous.
 		/// </summary>
-		Task CheckOutstandingChecks();
+		/// <param name="plate">The plate.</param>
+		/// <param name="container">The container.</param>
+		/// <returns></returns>
+		Task UpdateTruckContainerAsync(string plate, Container container = null);
 
 		/// <summary>
-		/// Checks the truck.
+		/// Gets the truck asynchronous.
+		/// </summary>
+		/// <param name="plate">The plate.</param>
+		/// <returns></returns>
+		Task<Truck> GetTruckAsync(string plate);
+
+		/// <summary>
+		/// Saves the truck asynchronous.
 		/// </summary>
 		/// <param name="truck">The truck.</param>
-		Task CheckTruck(Truck truck);
+		/// <returns></returns>
+		Task<Truck> SaveTruckAsync(Truck truck);
+
+		/// <summary>
+		/// Checks the outstanding checks asynchronous.
+		/// </summary>
+		/// <returns></returns>
+		Task CheckOutstandingChecksAsync();
+
+		/// <summary>
+		/// Checks the truck asynchronous.
+		/// </summary>
+		/// <param name="truck">The truck.</param>
+		/// <returns></returns>
+		Task CheckTruckAsync(Truck truck);
 	}
 }

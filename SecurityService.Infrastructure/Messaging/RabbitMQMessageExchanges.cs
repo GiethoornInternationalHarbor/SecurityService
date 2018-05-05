@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SecurityService.Core.Messaging
+namespace SecurityService.Infrastructure.Messaging
 {
-	public static class MessageExchanges
+	public static class RabbitMQMessageExchanges
 	{
 		public const string Default = "GiethoornInternationalHarbor";
 	}

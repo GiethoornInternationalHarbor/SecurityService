@@ -4,6 +4,10 @@
 	{
 		Unknown,
 		TruckArrivingEvent,
-		TruckDepartingEvent
+		TruckDepartingEvent,
+		TruckArrivedEvent,
+		TruckDepartedEvent,
+		ShipContainerLoadedEvent,
+		ShipContainerUnloadedEvent
 	}
 }

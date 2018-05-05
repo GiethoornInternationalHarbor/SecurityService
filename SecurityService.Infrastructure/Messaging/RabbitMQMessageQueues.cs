@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SecurityService.Core.Messaging
+namespace SecurityService.Infrastructure.Messaging
 {
-    public static class MessageQueues
+    public static class RabbitMQMessageQueues
     {
 		public const string Default = "SecurityService";
     }

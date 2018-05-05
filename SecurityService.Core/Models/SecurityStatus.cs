@@ -6,7 +6,7 @@ namespace SecurityService.Core.Models
 {
 	public enum SecurityStatus
 	{
-		Unknown,
+		NotStarted,
 		InProgress,
 		Completed
 	}

@@ -20,7 +20,7 @@ namespace SecurityService.Infrastructure.Messaging
 		private string _consumerTag;
 		private IMessageHandlerCallback _callback;
 
-		public RabbitMQMessageHandler(string uri, string exchange = MessageExchanges.Default, string queuename = MessageQueues.Default)
+		public RabbitMQMessageHandler(string uri, string exchange = RabbitMQMessageExchanges.Default, string queuename = RabbitMQMessageQueues.Default)
 		{
 			_uri = new Uri(uri);
 			_exchange = exchange;

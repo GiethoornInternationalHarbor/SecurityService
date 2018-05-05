@@ -9,17 +9,53 @@ namespace SecurityService.Core.Repositories
 	public interface ITruckRepository
 	{
 		/// <summary>
-		/// Creates or updates the specified object.
+		/// Creates the truck asynchronous.
 		/// </summary>
 		/// <param name="value">The value.</param>
 		/// <returns></returns>
-		Task<Truck> Save(Truck value);
-		
+		Task<Truck> CreateAsync(Truck value);
+
 		/// <summary>
-		/// Deletes the specified external identifier.
+		/// Updates the truck asynchronous.
 		/// </summary>
-		/// <param name="id">The identifier.</param>
+		/// <param name="value">The value.</param>
 		/// <returns></returns>
-		Task Delete(string plate);
+		Task<Truck> UpdateAsync(Truck value);
+
+		/// <summary>
+		/// Deletes the truck asynchronous.
+		/// </summary>
+		/// <param name="plate">The plate.</param>
+		/// <returns></returns>
+		Task DeleteAsync(string plate);
+
+		/// <summary>
+		/// Gets the truck asynchronous.
+		/// </summary>
+		/// <param name="plate">The plate.</param>
+		/// <returns></returns>
+		Task<Truck> GetAsync(string plate);
+
+		/// <summary>
+		/// Updates the security status asynchronous.
+		/// </summary>
+		/// <param name="plate">The plate.</param>
+		/// <param name="securityStatus">The security status.</param>
+		/// <returns></returns>
+		Task UpdateSecurityStatusAsync(string plate, SecurityStatus securityStatus);
+
+		/// <summary>
+		/// Gets the trucks needed to be checked asynchronous.
+		/// </summary>
+		/// <returns></returns>
+		Task<IEnumerable<Truck>> GetTrucksNeededToBeCheckedAsync();
+
+		/// <summary>
+		/// Updates the container asynchronous.
+		/// </summary>
+		/// <param name="plate">The plate.</param>
+		/// <param name="container">The container.</param>
+		/// <returns></returns>
+		Task UpdateContainerAsync(string plate, Container container = null);
 	}
 }
