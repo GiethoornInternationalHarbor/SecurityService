@@ -13,9 +13,6 @@ namespace SecurityService.Core.Models
 		public Container Container { get; set; }
 
 		[IgnoreDataMember]
-		public TruckStatus Status { get; set; }
-
-		[IgnoreDataMember]
 		public SecurityStatus SecurityStatus { get; set; }
 	}
 }

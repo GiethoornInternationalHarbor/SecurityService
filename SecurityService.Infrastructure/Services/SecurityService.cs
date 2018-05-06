@@ -17,13 +17,12 @@ namespace SecurityService.Infrastructure.Services
 		private const int CHECK_DURATION = 30000;
 		private readonly ITruckRepository _truckRepository;
 		private readonly IMessagePublisher _messagePublisher;
-		private readonly CancellationToken _cancellationToken;
 
 		public SecurityService(ITruckRepository truckRepository, IMessagePublisher messagePublisher)
 		{
 			_truckRepository = truckRepository;
 			_messagePublisher = messagePublisher;
-			_cancellationToken = new CancellationToken();
+			CheckOutstandingChecksAsync();
 		}
 
 		public Task CheckTruckAsync(Truck truck)
@@ -33,21 +32,24 @@ namespace SecurityService.Infrastructure.Services
 			{
 				truck.SecurityStatus = SecurityStatus.InProgress;
 				await _truckRepository.UpdateSecurityStatusAsync(truck.LicensePlate, SecurityStatus.InProgress);
-				Thread.Sleep(truck.Container == null ? CHECK_DURATION / 2 : CHECK_DURATION);
+				await Task.Delay(truck.Container == null ? CHECK_DURATION / 2 : CHECK_DURATION);
 				truck.SecurityStatus = SecurityStatus.Completed;
 				await _truckRepository.UpdateSecurityStatusAsync(truck.LicensePlate, SecurityStatus.Completed);
 
 				await _messagePublisher.PublishMessageAsync(MessageTypes.TruckClearedEvent, truck);
-			}, _cancellationToken);
+			});
 		}
 
-		public async Task CheckOutstandingChecksAsync()
+		public Task CheckOutstandingChecksAsync()
 		{
-			// This function should only be called once
-			IEnumerable<Truck> trucks = await _truckRepository.GetTrucksNeededToBeCheckedAsync();
+			return Task.Run(async () =>
+			{
+				// This function should only be called once
+				IEnumerable<Truck> trucks = await _truckRepository.GetTrucksNeededToBeCheckedAsync();
 
-			IEnumerable<Task> tasks = trucks.Select(t => CheckTruckAsync(t));
-			await Task.WhenAll(tasks);
+				IEnumerable<Task> tasks = trucks.Select(t => CheckTruckAsync(t));
+				await Task.WhenAll(tasks);
+			});
 		}
 
 		public Task<Truck> SaveTruckAsync(Truck truck)

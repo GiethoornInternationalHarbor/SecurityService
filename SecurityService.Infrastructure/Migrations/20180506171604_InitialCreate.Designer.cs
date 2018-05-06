@@ -12,7 +12,7 @@ using System;
 namespace SecurityService.Infrastructure.Migrations
 {
     [DbContext(typeof(SecurityDbContext))]
-    [Migration("20180505130231_InitialCreate")]
+    [Migration("20180506171604_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,8 +56,6 @@ namespace SecurityService.Infrastructure.Migrations
                     b.Property<string>("ContainerNumber");
 
                     b.Property<int>("SecurityStatus");
-
-                    b.Property<int>("Status");
 
                     b.HasKey("LicensePlate");
 
