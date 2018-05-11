@@ -31,7 +31,6 @@ namespace SecurityService.Infrastructure.Repositories
 			Truck existingTruck = await this.GetAsync(value.LicensePlate);
 
 			existingTruck.Container = value.Container;
-			existingTruck.Status = value.Status;
 			existingTruck.SecurityStatus = value.SecurityStatus;
 
 			await _database.SaveChangesAsync();

@@ -56,8 +56,6 @@ namespace SecurityService.Infrastructure.Migrations
 
                     b.Property<int>("SecurityStatus");
 
-                    b.Property<int>("Status");
-
                     b.HasKey("LicensePlate");
 
                     b.HasIndex("ContainerNumber");

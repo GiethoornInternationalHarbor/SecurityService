@@ -5,9 +5,8 @@
 		Unknown,
 		TruckArrivingEvent,
 		TruckDepartingEvent,
-		TruckArrivedEvent,
-		TruckDepartedEvent,
 		ShipContainerLoadedEvent,
-		ShipContainerUnloadedEvent
+		ShipContainerUnloadedEvent,
+		TruckClearedEvent
 	}
 }

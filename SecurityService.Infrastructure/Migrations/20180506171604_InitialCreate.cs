@@ -44,8 +44,7 @@ namespace SecurityService.Infrastructure.Migrations
                 {
                     LicensePlate = table.Column<string>(nullable: false),
                     ContainerNumber = table.Column<string>(nullable: true),
-                    SecurityStatus = table.Column<int>(nullable: false),
-                    Status = table.Column<int>(nullable: false)
+                    SecurityStatus = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

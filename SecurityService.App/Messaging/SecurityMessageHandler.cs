@@ -38,14 +38,6 @@ namespace SecurityService.App.Messaging
 					{
 						return await HandleShipContainerUnloaded(message);
 					}
-				case MessageTypes.TruckArrivedEvent:
-					{
-						return await HandleTruckArrived(message);
-					}
-				case MessageTypes.TruckDepartedEvent:
-					{
-						return await HandleTruckDeparted(message);
-					}
 			}
 
 			return true;
@@ -57,7 +49,6 @@ namespace SecurityService.App.Messaging
 			Truck receivedTruck = JsonSerializer.Deserialize<Truck>(message);
 
 			// Ensure the status is correct
-			receivedTruck.Status = TruckStatus.ARRIVING;
 			receivedTruck.SecurityStatus = SecurityStatus.NotStarted;
 
 			// Because we are arriving the truck is not yet created in the db
@@ -76,7 +67,6 @@ namespace SecurityService.App.Messaging
 
 			// We should already have a truck in our db
 			Truck existingTruck = await _securityService.GetTruckAsync(receivedTruck.LicensePlate);
-			existingTruck.Status = TruckStatus.DEPARTING;
 			existingTruck.SecurityStatus = SecurityStatus.NotStarted;
 
 			await _securityService.SaveTruckAsync(existingTruck);
@@ -104,32 +94,6 @@ namespace SecurityService.App.Messaging
 
 			// When a container is unloaded off the ship, it means it is put on the truck
 			await _securityService.UpdateTruckContainerAsync(truck.LicensePlate, truck.Container);
-
-			return true;
-		}
-
-		private async Task<bool> HandleTruckArrived(string message)
-		{
-			// Only need to update the status
-			Truck truck = JsonSerializer.Deserialize<Truck>(message);
-
-			Truck existingTruck = await _securityService.GetTruckAsync(truck.LicensePlate);
-			existingTruck.Status = TruckStatus.ARRIVED;
-
-			await _securityService.SaveTruckAsync(existingTruck);
-
-			return true;
-		}
-
-		private async Task<bool> HandleTruckDeparted(string message)
-		{
-			// Only need to update the status
-			Truck truck = JsonSerializer.Deserialize<Truck>(message);
-
-			Truck existingTruck = await _securityService.GetTruckAsync(truck.LicensePlate);
-			existingTruck.Status = TruckStatus.DEPARTED;
-
-			await _securityService.SaveTruckAsync(existingTruck);
 
 			return true;
 		}

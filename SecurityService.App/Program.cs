@@ -1,14 +1,12 @@
 ﻿using dotenv.net;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SecurityService.App;
 using SecurityService.App.Messaging;
 using SecurityService.Core.Messaging;
 using SecurityService.Infrastructure.DI;
 using System;
 using System.IO;
 using System.Threading;
-using Utf8Json;
 using Utf8Json.Resolvers;
 
 namespace SecurityService
@@ -51,7 +49,11 @@ namespace SecurityService
 
 		static void Main(string[] args)
 		{
-			JsonSerializer.SetDefaultResolver(StandardResolver.CamelCase);
+			CompositeResolver.RegisterAndSetAsDefault(new[]
+			{
+				EnumResolver.UnderlyingValue,
+				StandardResolver.ExcludeNullCamelCase
+			});
 
 			// Get the message handler
 			IMessageHandler messageHandler = ServiceProvider.GetService<IMessageHandler>();
