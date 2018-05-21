@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Polly;
 using SecurityService.Core;
 using SecurityService.Core.Messaging;
 using SecurityService.Core.Repositories;
@@ -35,10 +36,16 @@ namespace SecurityService.Infrastructure.DI
 
 		public static void OnServicesSetup(IServiceProvider serviceProvider)
 		{
-			Console.WriteLine("Connecting to database and migrating if required");
 			var dbContext = serviceProvider.GetService<SecurityDbContext>();
-			dbContext.Database.Migrate();
-			Console.WriteLine("Completed connecting to database");
+			Policy
+				.Handle<Exception>()
+				.WaitAndRetry(9, r => TimeSpan.FromSeconds(5), (ex, ts) => { Console.Error.WriteLine("Error connecting to database. Retrying in 5 sec."); })
+				.Execute(() =>
+				{
+					Console.WriteLine("Connecting to database and migrating if required");
+					dbContext.Database.Migrate();
+					Console.WriteLine("Completed connecting to database");
+				});
 		}
 	}
 }
