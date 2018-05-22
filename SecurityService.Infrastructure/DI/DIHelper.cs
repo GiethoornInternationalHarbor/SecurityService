@@ -25,7 +25,7 @@ namespace SecurityService.Infrastructure.DI
 		/// </summary>
 		public static void Setup(IServiceCollection services, IConfiguration configuration)
 		{
-			services.AddDbContext<SecurityDbContext>(options => options.UseSqlServer(configuration.GetSection("DB_CONNECTION_STRING").Value));
+			services.AddSingleton((provider) => new SecurityDbContextFactory(configuration.GetSection("DB_CONNECTION_STRING").Value));
 
 			services.AddTransient<ITruckRepository, TruckRepository>();
 			services.AddTransient<ISecurityService, Services.SecurityService>();
@@ -36,7 +36,8 @@ namespace SecurityService.Infrastructure.DI
 
 		public static void OnServicesSetup(IServiceProvider serviceProvider)
 		{
-			var dbContext = serviceProvider.GetService<SecurityDbContext>();
+			var dbContextFactory = serviceProvider.GetService<SecurityDbContextFactory>();
+			SecurityDbContext dbContext = dbContextFactory.CreateDbContext();
 			Policy
 				.Handle<Exception>()
 				.WaitAndRetry(9, r => TimeSpan.FromSeconds(5), (ex, ts) => { Console.Error.WriteLine("Error connecting to database. Retrying in 5 sec."); })

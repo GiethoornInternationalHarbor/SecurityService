@@ -13,15 +13,16 @@ namespace SecurityService.Infrastructure.Repositories
 {
 	public class TruckRepository : ITruckRepository
 	{
-		private readonly SecurityDbContext _database;
-		public TruckRepository(SecurityDbContext database)
+		private readonly SecurityDbContextFactory _securityDbContextFactory;
+		public TruckRepository(SecurityDbContextFactory dbContextFactory)
 		{
-			_database = database;
+			_securityDbContextFactory = dbContextFactory;
 		}
 
 		public async Task<Truck> UpdateAsync(Truck value)
 		{
-			var exists = await _database.Trucks.AnyAsync(r => r.LicensePlate == value.LicensePlate);
+			SecurityDbContext dbContext = _securityDbContextFactory.CreateDbContext();
+			var exists = await dbContext.Trucks.AnyAsync(r => r.LicensePlate == value.LicensePlate);
 
 			if (!exists)
 			{
@@ -33,49 +34,55 @@ namespace SecurityService.Infrastructure.Repositories
 			existingTruck.Container = value.Container;
 			existingTruck.SecurityStatus = value.SecurityStatus;
 
-			await _database.SaveChangesAsync();
+			await dbContext.SaveChangesAsync();
 
 			return existingTruck;
 		}
 
 		public async Task DeleteAsync(string plate)
 		{
+			SecurityDbContext dbContext = _securityDbContextFactory.CreateDbContext();
 			Truck truckToDelete = new Truck() { LicensePlate = plate };
-			_database.Entry(truckToDelete).State = EntityState.Deleted;
-			await _database.SaveChangesAsync();
+			dbContext.Entry(truckToDelete).State = EntityState.Deleted;
+			await dbContext.SaveChangesAsync();
 		}
 
 		public async Task Update(Truck value)
 		{
-			_database.Trucks.Update(value);
-			await _database.SaveChangesAsync();
+			SecurityDbContext dbContext = _securityDbContextFactory.CreateDbContext();
+			dbContext.Trucks.Update(value);
+			await dbContext.SaveChangesAsync();
 		}
 
 		public async Task UpdateSecurityStatusAsync(string plate, SecurityStatus securityStatus)
 		{
+			SecurityDbContext dbContext = _securityDbContextFactory.CreateDbContext();
 			Truck existingTruck = await this.GetAsync(plate);
 
 			existingTruck.SecurityStatus = securityStatus;
 
-			await _database.SaveChangesAsync();
+			await dbContext.SaveChangesAsync();
 		}
 
 		public async Task<IEnumerable<Truck>> GetTrucksNeededToBeCheckedAsync()
 		{
-			return await _database.Trucks.Where(t => t.SecurityStatus != SecurityStatus.Completed).ToArrayAsync();
+			SecurityDbContext dbContext = _securityDbContextFactory.CreateDbContext();
+			return await dbContext.Trucks.Where(t => t.SecurityStatus != SecurityStatus.Completed).ToArrayAsync();
 		}
 
 		public async Task<Truck> CreateAsync(Truck value)
 		{
-			var newTruck = (await _database.Trucks.AddAsync(value)).Entity;
-			await _database.SaveChangesAsync();
+			SecurityDbContext dbContext = _securityDbContextFactory.CreateDbContext();
+			var newTruck = (await dbContext.Trucks.AddAsync(value)).Entity;
+			await dbContext.SaveChangesAsync();
 
 			return newTruck;
 		}
 
 		public Task<Truck> GetAsync(string plate)
 		{
-			return _database.Trucks.LastOrDefaultAsync(r => r.LicensePlate == plate);
+			SecurityDbContext dbContext = _securityDbContextFactory.CreateDbContext();
+			return dbContext.Trucks.LastOrDefaultAsync(r => r.LicensePlate == plate);
 		}
 
 		public async Task UpdateContainerAsync(string plate, Container container = null)

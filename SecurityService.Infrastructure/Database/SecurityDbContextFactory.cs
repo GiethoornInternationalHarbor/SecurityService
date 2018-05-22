@@ -1,22 +1,32 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-#if DEBUG
 namespace SecurityService.Infrastructure.Database
 {
-	public class SecurityDbContextFactory : IDesignTimeDbContextFactory<SecurityDbContext>
+	public class SecurityDbContextFactory
 	{
-		public SecurityDbContext CreateDbContext(string[] args)
-		{
-			var optionsBuilder = new DbContextOptionsBuilder<SecurityDbContext>();
-			optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=SecurityService;Trusted_Connection=True;MultipleActiveResultSets=true");
+		/// <summary>
+		/// Gets or sets the connection string.
+		/// </summary>
+		protected string ConnectionString { get; set; }
 
-			return new SecurityDbContext(optionsBuilder.Options);
+		public SecurityDbContextFactory(string connectionString)
+		{
+			ConnectionString = connectionString;
+		}
+
+		/// <summary>
+		/// Creates the database context.
+		/// </summary>
+		/// <returns></returns>
+		public SecurityDbContext CreateDbContext()
+		{
+			var optBuilder = new DbContextOptionsBuilder<SecurityDbContext>();
+			optBuilder.UseSqlServer(ConnectionString);
+
+			return new SecurityDbContext(optBuilder.Options);
 		}
 	}
-
 }
-#endif
