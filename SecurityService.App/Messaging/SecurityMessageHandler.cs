@@ -22,19 +22,19 @@ namespace SecurityService.App.Messaging
 		{
 			switch (messageType)
 			{
-				case MessageTypes.TruckArrivingEvent:
+				case MessageTypes.TruckArriving:
 					{
 						return await HandleTruckArriving(message);
 					}
-				case MessageTypes.TruckDepartingEvent:
+				case MessageTypes.TruckDeparting:
 					{
 						return await HandleTruckDeparting(message);
 					}
-				case MessageTypes.ShipContainerLoadedEvent:
+				case MessageTypes.ShipContainerLoaded:
 					{
 						return await HandleShipContainerLoaded(message);
 					}
-				case MessageTypes.ShipContainerUnloadedEvent:
+				case MessageTypes.ShipContainerUnloaded:
 					{
 						return await HandleShipContainerUnloaded(message);
 					}

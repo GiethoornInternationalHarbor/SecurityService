@@ -3,10 +3,10 @@
 	public enum MessageTypes
 	{
 		Unknown,
-		TruckArrivingEvent,
-		TruckDepartingEvent,
-		ShipContainerLoadedEvent,
-		ShipContainerUnloadedEvent,
-		TruckClearedEvent
+		TruckArriving,
+		TruckDeparting,
+		ShipContainerLoaded,
+		ShipContainerUnloaded,
+		TruckCleared
 	}
 }

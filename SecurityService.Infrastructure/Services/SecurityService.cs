@@ -36,7 +36,7 @@ namespace SecurityService.Infrastructure.Services
 				truck.SecurityStatus = SecurityStatus.Completed;
 				await _truckRepository.UpdateSecurityStatusAsync(truck.LicensePlate, SecurityStatus.Completed);
 
-				await _messagePublisher.PublishMessageAsync(MessageTypes.TruckClearedEvent, truck);
+				await _messagePublisher.PublishMessageAsync(MessageTypes.TruckCleared, truck);
 			});
 		}
 
